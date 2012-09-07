@@ -4,24 +4,31 @@ jibberjabber
 Jabber (XMPP) bridge for shell scripts.
 
 License: LGPL
+
 Incorporates Smack API (Open Source Apache License): http://www.igniterealtime.org/projects/smack/
+
 JarJar (Apache License 2.0): https://code.google.com/p/jarjar/
+
 LGPL Source from http://devdaily.com/java/java-processbuilder-process-system-exec
 
 
+Description
+-----------
+
 This is a simple Java application that lets you run scripts VIA Jabber (XMPP, or Google Talk). It makes it very simple to expose scripts behind a firewall, through Jabber. Reasonable attempts have been made to prevent attacks, but use at your own risk.
 
-One example of using JibberJabber is for an interface to TaskWarrior. Create a script like this:
+One example of using JibberJabber is for an interface to TaskWarrior. Create a script like this (task.sh):
 
-cat task.sh
-
+<pre>
  #!/bin/sh
  yes | /usr/local/bin/task $@
-
+</pre>
 
 You can then do this from Google Talk:
 
+<pre>
  task add due:tomorrow Something
+</pre>
 
 JibberJabber treats the first word as the script name. Every other word (space delimited) is passed as a command line option. STDOUT and STDERR will be returned to you in Google Talk.
 
@@ -35,8 +42,9 @@ This application does NOT check the from address of the XMPP packet. It is assum
 Building
 --------
 
+<pre>
 ant all
-
+</pre>
 
 Note: Although written in Java, it has ONLY been tested under Linux. It should work under UNIX(like) operating systems. 
 
@@ -44,8 +52,8 @@ Note: Although written in Java, it has ONLY been tested under Linux. It should w
 Usage
 -----
 
-Look at jibberjabber.properties.example, edit appropriately, and save as jibberjabber.properties.
+Look at jibberjabber.properties.example, edit appropriately, and save as jibberjabber.properties (same directory as the jibberjabber.jar).
 
+<pre>
 java -jar jibberjabber.jar
-
-
+</pre>
