@@ -13,7 +13,7 @@ regex.paranoia = [^a-zA-Z0-9\u0020]
 
 # Script name regular expression. Do not disable this. It prevents absolute paths, ../../, etc.
 # You will need to adjust if your scripts have any characters other than allowed below in their names.
-regex.script = [^a-zA-Z0-9]
+regex.script = [^a-zA-Z0-9\u0020]
 
 # Path in which scripts may reside
 script.path = /home/user/scripts
