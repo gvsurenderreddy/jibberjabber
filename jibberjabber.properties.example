@@ -1,0 +1,27 @@
+# This is an example configuration file for JibberJabber. You must edit and save as jibberjabber.properties
+
+# Your server, account, password, etc.
+xmpp.server = talk.google.com
+xmpp.port = 5222
+xmpp.domain = gmail.com
+xmpp.username = example@gmail.com
+xmpp.password = badpassword
+
+# Paranoia regular expression. If configured, all incoming text is stripped using this expression.
+# Comment out to disable.
+regex.paranoia = [^a-zA-Z0-9\u0020]
+
+# Script name regular expression. Do not disable this. It prevents absolute paths, ../../, etc.
+# You will need to adjust if your scripts have any characters other than allowed below in their names.
+regex.script = [^a-zA-Z0-9]
+
+# Path in which scripts may reside
+script.path = /home/user/scripts
+
+# Extension for scripts. Appended to the incoming text, further prevents malicious execution.
+script.extension = .sh
+
+# If it exists, the contents of this file will be polled at the specified interval, and used as the Jabber status
+# message.
+status.file = /home/user/tmp/status.txt
+status.poll_seconds = 30

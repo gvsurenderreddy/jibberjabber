@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jibberjabber" default="all">
+
+    <taskdef name="jarjar" classname="com.tonicsystems.jarjar.JarJarTask"
+             classpath="lib/jarjar-1.0.jar"/>
+
+    <!-- Compiler options -->
+
+    <property name="compiler.debug" value="on"/>
+    <property name="compiler.generate.no.warnings" value="off"/>
+    <property name="compiler.args" value=""/>
+    <property name="compiler.max.memory" value="128m"/>
+    <patternset id="ignored.files">
+        <exclude name="**/CVS/**"/>
+        <exclude name="**/SCCS/**"/>
+        <exclude name="**/RCS/**"/>
+        <exclude name="**/rcs/**"/>
+        <exclude name="**/.DS_Store/**"/>
+        <exclude name="**/.svn/**"/>
+        <exclude name="**/.pyc/**"/>
+        <exclude name="**/.pyo/**"/>
+        <exclude name="**/*.pyc/**"/>
+        <exclude name="**/*.pyo/**"/>
+        <exclude name="**/.git/**"/>
+        <exclude name="**/*.hprof/**"/>
+        <exclude name="**/_svn/**"/>
+        <exclude name="**/.hg/**"/>
+        <exclude name="**/*.lib/**"/>
+        <exclude name="**/*~/**"/>
+        <exclude name="**/__pycache__/**"/>
+        <exclude name="**/.bundle/**"/>
+    </patternset>
+    <patternset id="library.patterns">
+        <include name="*.zip"/>
+        <include name="*.war"/>
+        <include name="*.egg"/>
+        <include name="*.ear"/>
+        <include name="*.swc"/>
+        <include name="*.jar"/>
+    </patternset>
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+        <include name="**/?*.ftl"/>
+    </patternset>
+
+
+    <!-- Project Libraries -->
+
+    <path id="library.smack.classpath">
+        <pathelement location="${basedir}/lib/smack.jar"/>
+        <pathelement location="${basedir}/lib/smackx-debug.jar"/>
+        <pathelement location="${basedir}/lib/smackx-jingle.jar"/>
+        <pathelement location="${basedir}/lib/smackx.jar"/>
+    </path>
+
+    <!-- Modules -->
+
+
+    <!-- Module JibberJabber -->
+
+    <dirname property="module.jibberjabber.basedir" file="${ant.file}"/>
+
+
+    <property name="compiler.args.jibberjabber" value="${compiler.args}"/>
+
+    <property name="jibberjabber.output.dir" value="${module.jibberjabber.basedir}/out/production/JibberJabber"/>
+    <property name="jibberjabber.testoutput.dir" value="${module.jibberjabber.basedir}/out/test/JibberJabber"/>
+
+    <path id="jibberjabber.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="jibberjabber.module.production.classpath">
+        <path refid="library.smack.classpath"/>
+    </path>
+
+    <path id="jibberjabber.runtime.production.module.classpath">
+        <pathelement location="${jibberjabber.output.dir}"/>
+        <path refid="library.smack.classpath"/>
+    </path>
+
+    <path id="jibberjabber.module.classpath">
+        <pathelement location="${jibberjabber.output.dir}"/>
+        <path refid="library.smack.classpath"/>
+    </path>
+
+    <path id="jibberjabber.runtime.module.classpath">
+        <pathelement location="${jibberjabber.testoutput.dir}"/>
+        <pathelement location="${jibberjabber.output.dir}"/>
+        <path refid="library.smack.classpath"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.jibberjabber">
+        <patternset refid="ignored.files"/>
+    </patternset>
+
+    <patternset id="excluded.from.compilation.jibberjabber">
+        <patternset refid="excluded.from.module.jibberjabber"/>
+    </patternset>
+
+    <path id="jibberjabber.module.sourcepath">
+        <dirset dir="${module.jibberjabber.basedir}">
+            <include name="src"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.jibberjabber"
+            depends="compile.module.jibberjabber.production,compile.module.jibberjabber.tests"
+            description="Compile module JibberJabber"/>
+
+    <target name="compile.module.jibberjabber.production" description="Compile module JibberJabber; production classes">
+        <mkdir dir="${jibberjabber.output.dir}"/>
+        <javac destdir="${jibberjabber.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}"
+               memorymaximumsize="${compiler.max.memory}" fork="true">
+            <compilerarg line="${compiler.args.jibberjabber}"/>
+            <bootclasspath refid="jibberjabber.module.bootclasspath"/>
+            <classpath refid="jibberjabber.module.production.classpath"/>
+            <src refid="jibberjabber.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.jibberjabber"/>
+        </javac>
+
+        <copy todir="${jibberjabber.output.dir}">
+            <fileset dir="${module.jibberjabber.basedir}/src">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.module.jibberjabber.tests" depends="compile.module.jibberjabber.production"
+            description="compile module JibberJabber; test classes" unless="skip.tests"/>
+
+    <target name="clean.module.jibberjabber" description="cleanup module">
+        <delete dir="${jibberjabber.output.dir}"/>
+        <delete dir="${jibberjabber.testoutput.dir}"/>
+    </target>
+
+    <target name="init" description="Build initialization">
+        <!-- Perform any build initialization in this target -->
+    </target>
+
+    <target name="clean" depends="clean.module.jibberjabber" description="cleanup all"/>
+
+    <target name="build.modules" depends="init, clean, compile.module.jibberjabber" description="build all modules"/>
+
+    <target name="build.jars">
+        <mkdir dir="${module.jibberjabber.basedir}/dist"/>
+
+        <jarjar jarfile="${module.jibberjabber.basedir}/dist/jibberjabber.jar">
+            <zipfileset src="${basedir}/lib/smack.jar"/>
+            <zipfileset src="${basedir}/lib/smackx.jar"/>
+
+            <manifest>
+                <attribute name="Main-Class" value="com.strongrandom.jibberjabber.Main"/>
+            </manifest>
+
+            <fileset dir="${jibberjabber.output.dir}"/>
+        </jarjar>
+    </target>
+
+    <target name="all" depends="build.modules,build.jars" description="build all"/>
+</project>
